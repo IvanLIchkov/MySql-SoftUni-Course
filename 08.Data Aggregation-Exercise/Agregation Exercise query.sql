@@ -49,7 +49,57 @@ WHERE `deposit_group` = 'Troll Chest'
 GROUP BY `first_letter`
 ORDER BY `first_letter`;
 
+
 SELECT `deposit_group`, `is_deposit_expired`, AVG(`deposit_interest`) AS `average_interest` FROM `wizzard_deposits`
-WHERE `deposit_start_date` > 1985-01-01
-GROUP BY `deposit_group`
-ORDER BY `deposit_group` DESC, `deposit_expiration_date` ASC;
+WHERE `deposit_start_date` > '1985-01-01'
+GROUP BY `deposit_group`, `is_deposit_expired`
+ORDER BY `deposit_group` DESC, `is_deposit_expired`;
+
+USE `soft_uni`;
+
+SELECT `department_id`, MIN(`salary`)  FROM `employees`
+WHERE `hire_date` > '2000-01-01'
+GROUP BY `department_id`
+HAVING `department_id` IN (2,5,7)
+ORDER by `department_id`;
+
+CREATE TABLE `high_paid_employees`AS
+	SELECT * FROM `employees` 
+    WHERE `salary` >30000;
+DELETE FROM `high_paid_employees` WHERE `manager_id` = 42;
+Update `high_paid_employees` SET `salary` = `salary` + 5000
+WHERE `department_id` = 1;
+SELECT `department_id`, AVG(`salary`) FROM `high_paid_employees`
+GROUP BY `department_id`
+ORDER BY `department_id`;
+
+SELECT `department_id`, MAX(`salary`) AS `max_salary` from `employees`
+GROUP BY `department_id`
+HAVING `MAX_SALARY` NOT BETWEEN 30000 AND 70000
+ORDER BY `department_id`;
+
+SELECT COUNT(`employee_id`) AS `` FROM `employees`
+WHERE `manager_id` is null;
+
+SELECT  `department_id`, ( 
+	SELECT DISTINCT `salary` FROM `employees` e
+	WHERE e.`department_id` = `employees`.`department_id`
+    ORDER BY `salary` DESC
+    LIMIT 1 OFFSET 2
+) AS `third_highest_salary` FROM `employees`
+GROUP BY `department_id`
+HAVING `third_highest_salary`is not null
+ORDER BY `department_id` ;
+
+SELECT `first_name`, `last_name`, `department_id` FROM `employees` AS `current_employee`
+WHERE `salary` >(SELECT AVG(`salary`) FROM `employees` other_employees
+				 WHERE `current_employee`. `department_id` = other_employees.`department_id`)
+ORDER BY `department_id`, `employee_id`
+LIMIT 10;
+
+SELECT `department_id`, sum(salary) AS `total_salary` FROM `employees`
+GROUP BY `department_id`
+ORDER BY `department_id`;
+	
+
+

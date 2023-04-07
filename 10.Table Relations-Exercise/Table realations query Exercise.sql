@@ -120,4 +120,107 @@ insert into teachers(teacher_id, `name`, manager_id) values
 (104, 'Ted', 105);
 
 #5.	Online Store Database
+create database online_store;
+use online_store;
+
+ create table cities(
+	city_id int primary key auto_increment,
+    `name` varchar(50) not null
+ );
+create table item_types (
+	item_type_id int primary key auto_increment,
+    `name` varchar(50)
+);
+
+create table items(
+	item_id int primary key auto_increment,
+    `name` varchar(50) not null,
+    item_type_id int not null,
+    constraint fk_itemTypeId_itemId
+    foreign key (item_type_id)
+    references item_types(item_type_id)
+);
+ create table customers (
+	customer_id int primary key auto_increment,
+    `name` varchar(50) not null,
+    birthday date,
+    city_id int not null,
+    constraint fk_cities_costumers
+    foreign key (city_id)
+    references cities(city_id)
+ );
+ CREATE TABLE orders (
+    order_id INT primary key auto_increment,
+    customer_id INT not null,
+    CONSTRAINT fk FOREIGN KEY (customer_id)
+        REFERENCES customers (customer_id)
+);
+ create table order_items(
+	order_id int not null ,
+    item_id int not null ,
+    constraint fk
+	primary key (order_id, item_id),
+    CONSTRAINT fk_order_items_orders FOREIGN KEY (order_id)
+        REFERENCES orders(order_id),
+    CONSTRAINT fk_orders_customers FOREIGN KEY (item_id)
+        REFERENCES items (item_id)
+ );
+
+ 
+
+#6.	University Database
+create database university;
+use university;
+
+create table `subjects`(
+	`subject_id` int primary key auto_increment,
+    `subject_name` varchar(50)
+);
+
+create table `majors`(
+	`major_id` int primary key auto_increment,
+    `name` varchar(50) 
+);
+create table `students`(
+	`student_id` int primary key auto_increment,
+    `student_number` varchar(12),
+    `student_name` varchar(50),
+    `major_id` int,
+    constraint `fk_major`
+    foreign key (`major_id`)
+    references `majors`(`major_id`)
+);
+
+CREATE TABLE agenda (
+    `student_id` INT not null, 
+    `subject_id` INT not null,
+    CONSTRAINT fk_student FOREIGN KEY (`student_id`)
+        REFERENCES students (`student_id`),
+        primary key (student_id, subject_id)
+   
+);
+alter table agenda 
+ add CONSTRAINT fk_subject FOREIGN KEY (`subject_id`)
+        REFERENCES `subjects` (`subject_id`);
+        
+CREATE TABLE `payments` (
+    `payment_amount` DECIMAL(8 , 2 ),
+    `payment_date` DATE,
+    `payment_id` INT PRIMARY KEY AUTO_INCREMENT,
+    `student_id` INT,
+    CONSTRAINT `fk_students` FOREIGN KEY (`student_id`)
+        REFERENCES `students` (`student_id`)
+);
+#9.	Peaks in Rila
+use geography;
+
+SELECT 
+    m.`mountain_range`, p.peak_name, p.`elevation` as `peak_elevation`
+FROM
+    `mountains` AS m
+        JOIN
+    peaks AS p ON p.mountain_id = m.id
+    where `mountain_range` = 'Rila'
+    order by `peak_elevation` DESC;
+
 

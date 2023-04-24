@@ -65,7 +65,7 @@ DECLARE count_by_id INT;
 	ELSE
 		COMMIT;
 	END IF;
-END$$ 
+END$$
 
 
 CREATE TABLE `deleted_employees`(
